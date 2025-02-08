@@ -1,10 +1,9 @@
-// pages/api/v1/pdf/index.js
 import { getSession } from "@auth0/nextjs-auth0";
 import { geminiParse } from "@/db/actions/geminiParse";
 import formidable from 'formidable';
 import fs from 'fs/promises';
-import { insertBalanceSheet } from "@/db/actions/json";
 import { connectToDatabase } from "@/db/dbClient";
+import { getBalanceSheets, insertBalanceSheet } from "@/db/actions/balanceSheetActions";
 
 export const config = {
   api: {
@@ -12,12 +11,11 @@ export const config = {
   }
 };
 
-// Helper function to parse form data
 const parseForm = (req) => {
   return new Promise((resolve, reject) => {
     const form = formidable({
       keepExtensions: true,
-      maxFileSize: 20 * 1024 * 1024, // 10MB limit
+      maxFileSize: 20 * 1024 * 1024, 
     });
     
     form.parse(req, (err, fields, files) => {
@@ -29,7 +27,6 @@ const parseForm = (req) => {
 
 export default async function handler(req, res) {
   const session = await getSession(req, res);
-  console.log("Session:", session);
   
   if (!session || !session.user) {
     return res.status(401).json({ error: "Unauthorized Access" });
@@ -37,17 +34,25 @@ export default async function handler(req, res) {
 
   try {
     switch (req.method) {
+      case "GET":
+        try {
+          const userId = session.user.sub;
+          await connectToDatabase();
+          const balanceSheetArr = await getBalanceSheets(userId);
+          console.log(balanceSheetArr)
+          return res.status(200).json(balanceSheetArr);
+        } catch (error) {
+          return res.status(400).json({ error: error.message });
+        }
       case "POST":
         try {
           const { files } = await parseForm(req);
-          const file = files.pdf?.[0] || files.pdf; // Handle both new and old formidable versions
+          const file = files.pdf?.[0] || files.pdf;
 
           if (!file) {
             return res.status(400).json({ error: 'No PDF file provided' });
           }
 
-
-          // Read the file buffer
           let buffer;
           try {
             buffer = await fs.readFile(file.filepath || file.path);
@@ -59,10 +64,8 @@ export default async function handler(req, res) {
             });
           }
 
-          // Send to parsePDF
           const jsonData = await geminiParse(buffer);
           
-          // Clean up the temporary file
           try {
             await fs.unlink(file.filepath || file.path);
           } catch (unlinkError) {

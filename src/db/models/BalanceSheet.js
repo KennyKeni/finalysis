@@ -37,7 +37,7 @@ const BalanceSheetSchema = new mongoose.Schema({
 	},
 
 	liabilities: {
-		totalLiabilities: { type: Number, required: true },
+		totalLiabilities: { type: Number, required: false },
 		currentLiabilities: {
 			accountsPayable: { type: Number, default: null },
 			shortTermDebt: { type: Number, default: null },
@@ -55,7 +55,7 @@ const BalanceSheetSchema = new mongoose.Schema({
 	},
 
 	equity: {
-		totalEquity: { type: Number, required: true },
+		totalEquity: { type: Number, required: false },
 		commonStock: { type: Number, default: null },
 		retainedEarnings: { type: Number, default: null },
 		additionalPaidInCapital: { type: Number, default: null },

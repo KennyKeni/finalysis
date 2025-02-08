@@ -1,220 +1,319 @@
-// File: FinancialStatementSchema.js
-import { SchemaType } from "@google/generative-ai";
+import { SchemaType } from "@google/generative-ai"; 
 
-// Updated FinancialStatementSchema with enhanced descriptions for 10-Q and 10-K filings
-
-const FinancialStatementSchema = {
+export const FinancialStatementSchema = {
   type: SchemaType.OBJECT,
-  description: "Comprehensive financial statement data structure for balance sheet and company information",
+  description:
+    "A comprehensive financial statement data structure derived from SEC 10-Q (quarterly) and 10-K (annual) filings. " +
+    "This schema captures key information about the company, reporting period, assets, liabilities, and equity. " +
+    "It also includes alternative terms or synonyms (e.g., 'legal name' for companyName, 'stock symbol' for tickerSymbol) " +
+    "to accommodate the variations in terminology that may appear in the filings.",
   properties: {
-    companyName: { 
-      type: SchemaType.STRING, 
-      description: "Full legal name of the company as shown in the document header" 
+    companyName: {
+      type: SchemaType.STRING,
+      description:
+        "The full legal name of the company as shown on the filing header. " +
+        "Also known as the 'official name' or 'legal entity name'. " +
+        "This should match the name registered with the SEC.",
     },
-    tickerSymbol: { 
-      type: SchemaType.STRING, 
-      description: "Stock market ticker symbol for publicly traded companies (e.g., AAPL for Apple Inc.)" 
+    tickerSymbol: {
+      type: SchemaType.STRING,
+      description:
+        "The stock market ticker symbol for publicly traded companies. " +
+        "Also referred to as 'stock symbol', 'ticker', or 'trading symbol'. " +
+        "For example, AAPL for Apple Inc.",
     },
-    companyType: { 
-      type: SchemaType.STRING, 
+    companyType: {
+      type: SchemaType.STRING,
       enum: ["public", "private"],
-      description: "Whether the company is publicly traded or privately held" 
+      description:
+        "Indicates whether the company is publicly traded or privately held. " +
+        "For SEC filings (10-Q and 10-K), this is typically 'public'. " +
+        "Alternative terms include 'listed' or 'non-private'.",
     },
-    filingType: { 
-      type: SchemaType.STRING, 
+    filingType: {
+      type: SchemaType.STRING,
       enum: ["10-Q", "10-K", "Private"],
-      description: "Type of financial statement filing - 10-Q for quarterly, 10-K for annual reports" 
+      description:
+        "Specifies the type of SEC filing: '10-Q' for quarterly reports, '10-K' for annual reports, " +
+        "or 'Private' if not applicable to SEC filings. " +
+        "This may also be called the report type, filing form, or statement type.",
     },
-    filingDate: { 
-      type: SchemaType.STRING, 
-      description: "Date when the financial statement was filed, in YYYY-MM-DD format" 
+    filingDate: {
+      type: SchemaType.STRING,
+      description:
+        "The date when the financial statement was filed with the SEC, in YYYY-MM-DD format. " +
+        "This date is critical for period comparison and trend analysis. " +
+        "Also referred to as 'date of filing' or 'submission date'.",
     },
-    fiscalYearStart: { 
-      type: SchemaType.STRING, 
-      description: "Start date of the company's fiscal year, in YYYY-MM-DD format" 
+    fiscalYearStart: {
+      type: SchemaType.STRING,
+      description:
+        "The start date of the company's fiscal year (YYYY-MM-DD format). " +
+        "This sets the context for the reporting period and may also be referred to as 'fiscal start date' or 'beginning of fiscal year'.",
     },
     period: {
       type: SchemaType.OBJECT,
-      description: "Information about the reporting period covered by the financial statement",
+      description:
+        "Information about the reporting period covered by the filing, which may be a quarter, full year, or another defined period. " +
+        "Also known as the 'reporting period' or 'period covered'.",
       properties: {
-        type: { 
-          type: SchemaType.STRING, 
-          enum: ["Q1", "Q2", "Q3", "Q4", "FY", "Monthly", "Biannual", "Custom", "null"],
-          description: "Type of reporting period (Q1-Q4 for quarters, FY for full year)" 
+        type: {
+          type: SchemaType.STRING,
+          enum: ["Q1", "Q2", "Q3", "Q4", "FY", "Monthly", "Biannual", "Custom"],
+          description:
+            "The specific reporting period for the filing. For 10-Q filings, expect Q1 to Q4; " +
+            "for 10-K filings, this is typically 'FY' (full year). " +
+            "May also be referenced as 'quarter' or 'report period type'.",
         },
-        periodStart: { 
-          type: SchemaType.STRING, 
-          description: "Start date of the reporting period in YYYY-MM-DD format" 
+        periodStart: {
+          type: SchemaType.STRING,
+          description:
+            "The start date of the reporting period (YYYY-MM-DD format), marking the beginning of the period covered. " +
+            "Also known as 'period start date' or 'from date'.",
         },
-        periodEnd: { 
-          type: SchemaType.STRING, 
-          description: "End date of the reporting period in YYYY-MM-DD format" 
-        }
-      }
+        periodEnd: {
+          type: SchemaType.STRING,
+          description:
+            "The end date of the reporting period (YYYY-MM-DD format), indicating the last day of the reported period. " +
+            "Also referred to as 'period end date' or 'to date'.",
+        },
+      },
     },
-    currency: { 
+    currency: {
       type: SchemaType.STRING,
-      description: "Currency used in the financial statements (e.g., USD, EUR). $ would be USD" 
+      description:
+        "The currency used in the financial statements, typically represented by a three-letter code (e.g., USD, EUR). " +
+        "A '$' symbol usually denotes USD. " +
+        "Alternative descriptions include 'monetary unit' or 'currency code'.",
     },
     assets: {
       type: SchemaType.OBJECT,
-      description: "Complete breakdown of company assets, both current and non-current",
+      description:
+        "A detailed breakdown of the company's assets as reported in the filing, separated into current and non-current categories. " +
+        "Assets may also be called 'resources' or 'property holdings'.",
       properties: {
-        totalAssets: { 
+        totalAssets: {
           type: SchemaType.NUMBER,
-          description: "Total value of all assets (must equal total of current + non-current assets)" 
+          description:
+            "The total value of all assets, which should equal the sum of current and non-current assets. " +
+            "Also known as 'aggregate assets' or 'total resource value'.",
         },
         currentAssets: {
           type: SchemaType.OBJECT,
-          description: "Assets expected to be converted to cash within one year",
+          description:
+            "Assets expected to be converted to cash or used up within one year. " +
+            "Also known as 'short-term assets'.",
           properties: {
-            cashAndEquivalents: { 
+            cashAndEquivalents: {
               type: SchemaType.NUMBER,
-              description: "Cash and highly liquid investments, including money market funds and short-term government securities" 
+              description:
+                "Cash and liquid investments, such as money market funds and short-term government securities. " +
+                "May also be called 'liquidity' or 'cash resources'.",
             },
-            accountsReceivable: { 
+            accountsReceivable: {
               type: SchemaType.NUMBER,
-              description: "Money owed to company by customers for goods or services delivered" 
+              description:
+                "Amounts due from customers for goods or services provided on credit. " +
+                "Also referred to as 'receivables' or 'outstanding customer balances'.",
             },
-            inventory: { 
+            inventory: {
               type: SchemaType.NUMBER,
-              description: "Value of goods available for sale or raw materials" 
+              description:
+                "The value of goods available for sale or raw materials, including work in progress. " +
+                "Also known as 'stock' or 'inventories'.",
             },
-            otherCurrentAssets: { 
+            otherCurrentAssets: {
               type: SchemaType.NUMBER,
-              description: "Any other current assets not categorized above" 
+              description:
+                "Any additional current assets not included above, such as prepaid expenses or short-term receivables. " +
+                "May be called 'miscellaneous current assets'.",
             },
-            totalCurrentAssets: { 
+            totalCurrentAssets: {
               type: SchemaType.NUMBER,
-              description: "Sum of all current assets listed above" 
-            }
-          }
+              description:
+                "The sum of all current assets. This total should match the sum of cash, receivables, inventory, and other current asset items. " +
+                "Also known as 'total short-term assets'.",
+            },
+          },
         },
         nonCurrentAssets: {
           type: SchemaType.OBJECT,
-          description: "Long-term assets not expected to be converted to cash within a year",
+          description:
+            "Long-term assets that are not expected to be liquidated within one year. " +
+            "These may include tangible and intangible assets and are sometimes called 'fixed assets' or 'long-term resources'.",
           properties: {
-            propertyPlantEquipment: { 
+            propertyPlantEquipment: {
               type: SchemaType.NUMBER,
-              description: "Value of physical assets like buildings, machinery, and equipment (net of depreciation)" 
+              description:
+                "The net value of physical assets like buildings, machinery, and equipment after depreciation. " +
+                "May also be referenced as 'PPE' or 'fixed property'.",
             },
-            goodwill: { 
+            goodwill: {
               type: SchemaType.NUMBER,
-              description: "Intangible value from acquisitions above book value" 
+              description:
+                "The intangible premium paid during acquisitions, representing the excess of the purchase price over the fair value of identifiable net assets. " +
+                "Also known as 'acquisition premium' or simply 'goodwill'.",
             },
-            intangibleAssets: { 
+            intangibleAssets: {
               type: SchemaType.NUMBER,
-              description: "Value of non-physical assets like patents, trademarks, and licenses" 
+              description:
+                "The value of non-physical assets such as patents, trademarks, copyrights, and licenses. " +
+                "May also be called 'intangible property'.",
             },
-            longTermInvestments: { 
+            longTermInvestments: {
               type: SchemaType.NUMBER,
-              description: "Investments intended to be held for more than one year" 
+              description:
+                "Investments held for more than one year, which may include stakes in other companies or bonds. " +
+                "Also known as 'long-term securities'.",
             },
-            otherNonCurrentAssets: { 
+            otherNonCurrentAssets: {
               type: SchemaType.NUMBER,
-              description: "Any other long-term assets not categorized above" 
+              description:
+                "Any additional long-term assets not categorized above, such as long-term receivables or deferred charges. " +
+                "May also be referred to as 'other fixed assets'.",
             },
-            totalNonCurrentAssets: { 
+            totalNonCurrentAssets: {
               type: SchemaType.NUMBER,
-              description: "Sum of all non-current assets listed above" 
-            }
-          }
-        }
-      }
+              description:
+                "The total of all non-current assets. This should equal the sum of all long-term asset components. " +
+                "Also known as 'aggregate long-term assets'.",
+            },
+          },
+        },
+      },
     },
     liabilities: {
       type: SchemaType.OBJECT,
-      description: "Complete breakdown of company liabilities, both current and non-current",
+      description:
+        "A detailed breakdown of the company's liabilities as reported in the filing, divided into current (short-term) and non-current (long-term) obligations. " +
+        "Liabilities may also be called 'debts' or 'obligations'.",
       properties: {
-        totalLiabilities: { 
+        totalLiabilities: {
           type: SchemaType.NUMBER,
-          description: "Total value of all liabilities (must equal total of current + non-current liabilities)" 
+          description:
+            "The total amount of liabilities, which should equal the sum of current and non-current liabilities. " +
+            "Also known as 'aggregate liabilities' or 'total debt'.",
         },
         currentLiabilities: {
           type: SchemaType.OBJECT,
-          description: "Obligations due within one year",
+          description:
+            "Obligations due within one year, such as accounts payable, short-term debt, and accrued expenses. " +
+            "Also known as 'short-term liabilities'.",
           properties: {
-            accountsPayable: { 
+            accountsPayable: {
               type: SchemaType.NUMBER,
-              description: "Money owed to suppliers for goods or services received" 
+              description:
+                "Amounts owed to suppliers for goods or services received on credit. " +
+                "May also be referred to as 'payables' or 'vendor obligations'.",
             },
-            shortTermDebt: { 
+            shortTermDebt: {
               type: SchemaType.NUMBER,
-              description: "Debt obligations due within one year, including current portion of long-term debt" 
+              description:
+                "Debt obligations due within one year, including the current portion of long-term debt. " +
+                "Also known as 'current debt' or 'short-term borrowings'.",
             },
-            accruedExpenses: { 
+            accruedExpenses: {
               type: SchemaType.NUMBER,
-              description: "Expenses recognized but not yet paid" 
+              description:
+                "Expenses incurred but not yet paid, such as wages, utilities, and interest. " +
+                "May also be referred to as 'accruals' or 'pending expenses'.",
             },
-            otherCurrentLiabilities: { 
+            otherCurrentLiabilities: {
               type: SchemaType.NUMBER,
-              description: "Any other current liabilities not categorized above" 
+              description:
+                "Other short-term liabilities not categorized above, such as current tax liabilities or deferred revenue for short-term services. " +
+                "May also be called 'miscellaneous current liabilities'.",
             },
-            totalCurrentLiabilities: { 
+            totalCurrentLiabilities: {
               type: SchemaType.NUMBER,
-              description: "Sum of all current liabilities listed above" 
-            }
-          }
+              description:
+                "The sum of all current liabilities. This total should match the sum of accounts payable, short-term debt, accrued expenses, and other current liabilities. " +
+                "Also known as 'aggregate short-term liabilities'.",
+            },
+          },
         },
         nonCurrentLiabilities: {
           type: SchemaType.OBJECT,
-          description: "Long-term obligations not due within one year",
+          description:
+            "Obligations that extend beyond one year, including long-term debt and deferred liabilities. " +
+            "These may also be called 'long-term obligations' or 'non-current debts'.",
           properties: {
-            longTermDebt: { 
+            longTermDebt: {
               type: SchemaType.NUMBER,
-              description: "Long-term borrowings and bonds payable beyond one year" 
+              description:
+                "Long-term borrowings and bonds payable that are due after one year. " +
+                "May also be referred to as 'non-current debt'.",
             },
-            pensionLiabilities: { 
+            pensionLiabilities: {
               type: SchemaType.NUMBER,
-              description: "Future pension obligations to employees" 
+              description:
+                "Future obligations related to employee pension benefits. " +
+                "Also known as 'pension obligations'.",
             },
-            deferredRevenue: { 
+            deferredRevenue: {
               type: SchemaType.NUMBER,
-              description: "Payments received for goods/services to be delivered in future" 
+              description:
+                "Revenue received in advance for goods or services to be delivered later. " +
+                "May also be called 'unearned revenue' or 'deferred income'.",
             },
-            otherNonCurrentLiabilities: { 
+            otherNonCurrentLiabilities: {
               type: SchemaType.NUMBER,
-              description: "Any other long-term liabilities not categorized above" 
+              description:
+                "Other long-term liabilities not captured above, such as deferred tax liabilities or long-term lease obligations. " +
+                "Also known as 'miscellaneous long-term liabilities'.",
             },
-            totalNonCurrentLiabilities: { 
+            totalNonCurrentLiabilities: {
               type: SchemaType.NUMBER,
-              description: "Sum of all non-current liabilities listed above" 
-            }
-          }
-        }
-      }
+              description:
+                "The total of all non-current liabilities, which should equal the sum of all long-term liability components. " +
+                "Also referred to as 'aggregate long-term liabilities'.",
+            },
+          },
+        },
+      },
     },
     equity: {
       type: SchemaType.OBJECT,
-      description: "Shareholders' equity section showing ownership interests",
+      description:
+        "The shareholders' equity section representing the residual interest in the company’s assets after deducting liabilities. " +
+        "This section is also referred to as 'net worth' or 'owners' equity' and includes common stock, retained earnings, and additional equity adjustments.",
       properties: {
-        totalEquity: { 
+        totalEquity: {
           type: SchemaType.NUMBER,
-          description: "Total shareholders' equity (must equal total assets minus total liabilities)" 
+          description:
+            "The total shareholders' equity, calculated as total assets minus total liabilities. " +
+            "Also known as 'net assets' or 'book value'.",
         },
-        commonStock: { 
+        commonStock: {
           type: SchemaType.NUMBER,
-          description: "Par value of issued common stock" 
+          description:
+            "The par value of issued common stock. This may also be called 'capital stock' or 'issued stock value'.",
         },
-        retainedEarnings: { 
+        retainedEarnings: {
           type: SchemaType.NUMBER,
-          description: "Accumulated profits not paid out as dividends" 
+          description:
+            "The cumulative net income retained in the company after dividends. " +
+            "Also known as 'accumulated earnings' or 'retained profits'.",
         },
-        additionalPaidInCapital: { 
+        additionalPaidInCapital: {
           type: SchemaType.NUMBER,
-          description: "Amount paid by shareholders in excess of par value" 
+          description:
+            "Funds received from shareholders in excess of the par value of the stock. " +
+            "This is sometimes called 'paid-in surplus' or 'capital surplus'.",
         },
-        treasuryStock: { 
+        treasuryStock: {
           type: SchemaType.NUMBER,
-          description: "Cost of shares repurchased by the company (negative number)" 
+          description:
+            "The cost of shares repurchased by the company, usually reported as a negative value. " +
+            "May also be referred to as 'repurchased stock' or 'treasury shares'.",
         },
-        otherEquity: { 
+        otherEquity: {
           type: SchemaType.NUMBER,
-          description: "Other equity items including accumulated other comprehensive income/loss" 
-        }
-      }
-    }
-  }
+          description:
+            "Other equity components such as accumulated other comprehensive income or losses, including unrealized gains or losses on securities. " +
+            "May also be referred to as 'other comprehensive income' or 'OCI'.",
+        },
+      },
+    },
+  },
 };
-
-export default FinancialStatementSchema;
