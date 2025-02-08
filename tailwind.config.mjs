@@ -10,7 +10,10 @@ export default {
   	extend: {
   		colors: {
   			background: 'var(--background)',
-  			foreground: 'var(--foreground)'
+  			foreground: 'var(--foreground)',
+				aluminum: '#D9D9D9',
+				shell: '#e6ecec',
+				slate: '#f0f7f7'
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
