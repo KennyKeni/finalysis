@@ -5,7 +5,7 @@ export default function TopBar() {
 
   return (
     <div className="flex flex-row justify-start items-center w-full h-16 border-b-2 border-aluminum bg-slate">
-      <div className="flex flex-row justify-start items-center w-[6.5rem] h-16 pl-4 border-b-1 border-r-2 border-aluminum sm:w-[17%]">
+      <div className="flex flex-row justify-start items-center w-[6.5rem] h-16 pl-4 font-bold border-b-1 border-r-2 border-aluminum sm:w-[17%]">
         Finalysis
       </div>
       <div className="flex flex-row justify-between items-center h-full">
