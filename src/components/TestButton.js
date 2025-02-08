@@ -6,7 +6,7 @@ export default function TestButton() {
 
   const fetchUser = async () => {
     try {
-      const response = await fetch("/api/v1/test", {
+      const response = await fetch("/api/v1/test/gemini", {
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

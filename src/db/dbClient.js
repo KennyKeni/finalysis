@@ -9,7 +9,7 @@ const uri = process.env.MONGODB_URI;
 const options = {
 };
 
-let isConnected = false; // Track connection state
+let isConnected = false; 
 
 async function connectToDatabase() {
     if (isConnected) {

@@ -1,6 +1,5 @@
 import BalanceSheet from "../models/BalanceSheet";
 
-
 export async function insertBalanceSheet(balanceSheetData) {
     try {
       const newEntry = new BalanceSheet(balanceSheetData);
