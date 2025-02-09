@@ -80,9 +80,8 @@ export default function Dashboard() {
             number={data.equity.retainedEarnings}
           />
         </div>
-        
         <div className="flex flex-row justify-center items-center w-[15rem] h-[15rem] mt-4 sm:w-full">
-          <DataChart />
+          <DataChart data={jsonArr}/>
         </div>
       </div>
     </div>

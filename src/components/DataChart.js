@@ -1,8 +1,7 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { CartesianGrid, Line, LineChart, XAxis, YAxis} from "recharts"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import {
   Card,
@@ -18,20 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import MonthSelect from "./MonthSelect"
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "July", desktop: 214, mobile: 140 },
-  { month: "August", desktop: 214, mobile: 140 },
-  { month: "September", desktop: 214, mobile: 140 },
-  { month: "October", desktop: 214, mobile: 140 },
-  { month: "November", desktop: 214, mobile: 140 },
-  { month: "December", desktop: 214, mobile: 140 },
-]
+
 
 const chartConfig = {
   desktop: {
@@ -54,10 +40,63 @@ const monthToNumber = (month) => {
   return months.indexOf(month)
 }
 
-export default function DataChart() {
+const chartData = []
+
+// Function to add or update total assets for the corresponding month
+function updateChartDataWithAssets(chartData, balanceSheetDataArray) {
+    // Loop through the balance sheet data
+    balanceSheetDataArray.forEach(balanceSheet => {
+    // Extract the month from the filing date
+    const month = new Date(balanceSheet.filingDate).toLocaleString('default', { month: 'long' });
+
+    // Find if the month already exists in the chartData array
+    const monthData = chartData.find(item => item.month === month);
+
+    if (monthData) {
+      // If the month exists, update the totalAssets field
+      monthData.totalAssets = balanceSheet.totalAssets;
+    } else {
+      // If the month doesn't exist, create a new entry for that month
+      chartData.push({
+        month: month,
+        totalAssets: balanceSheet.totalAssets,
+      });
+    }
+  });
+
+  setChartData(updatedChartData)
+}
+
+export default function DataChart( {balanceSheetDataArray} ) {
   
   const [startMonth, setStartMonth] = useState("January")
   const [endMonth, setEndMonth] = useState("December")
+  const [chartData, setChartData] = useState([])
+
+  // Function to update the chart data with balance sheet assets
+  const updateChartDataWithAssets = (balanceSheetDataArray) => {
+    const updatedChartData = []
+
+    balanceSheetDataArray.forEach(balanceSheet => {
+      const month = new Date(balanceSheet.filingDate).toLocaleString('default', { month: 'long' })
+      const existingData = updatedChartData.find(item => item.month === month)
+
+      if (existingData) {
+        existingData.totalAssets = balanceSheet.totalAssets
+      } else {
+        updatedChartData.push({
+          month: month,
+          totalAssets: balanceSheet.totalAssets,
+        })
+      }
+    })
+
+    setChartData(updatedChartData)
+  }
+
+  useEffect(() => {
+    updateChartDataWithAssets(balanceSheetDataArray)
+  }, [balanceSheetDataArray])
 
   const availableStartMonths = months.filter((month) => monthToNumber(month) < monthToNumber(endMonth))
   const availableEndMonths = months.filter((month) => monthToNumber(month) > monthToNumber(startMonth))
