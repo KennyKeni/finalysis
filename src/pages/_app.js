@@ -1,4 +1,6 @@
 import "@/styles/globals.css";
+import { UserProvider } from '@auth0/nextjs-auth0/client';
+
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 
@@ -6,14 +8,14 @@ export default function App({ Component, pageProps }) {
   const router = useRouter();
 
   return (
-    <>
+    <UserProvider>
     {router.pathname === "/" || router.pathname === "/404" || router.pathname === "/settings" ? (
       <Component {...pageProps} />
-    ) :
+      ) :
       <Layout>
         <Component {...pageProps} />
       </Layout>
     }
-    </>
+    </UserProvider>
   );
 }
