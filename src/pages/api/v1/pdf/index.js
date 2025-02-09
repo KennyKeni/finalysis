@@ -36,11 +36,12 @@ export default async function handler(req, res) {
     switch (req.method) {
       case "GET":
         try {
+          console.log("GET");
           const userId = session.user.sub;
           await connectToDatabase();
           const balanceSheetArr = await getBalanceSheets(userId);
-          console.log(balanceSheetArr)
-          return res.status(200).json(balanceSheetArr);
+          res.setHeader('Content-Type', 'application/json');
+          return res.status(200).json({data: balanceSheetArr});
         } catch (error) {
           return res.status(400).json({ error: error.message });
         }
@@ -93,6 +94,7 @@ export default async function handler(req, res) {
 
           await connectToDatabase();
           insertBalanceSheet(balanceSheetData)
+          return res.status(200)
 
         } catch (error) {
           console.error("Error processing PDF:", error);

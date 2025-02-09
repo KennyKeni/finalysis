@@ -8,7 +8,7 @@ export default async function fetchService(endpoint, request) {
         ...request.headers,
       },
     });
-  
+    console.log("Response Object:", response);
     if (!response.ok) {
       throw new Error(`${response.status}`);
     }
@@ -16,7 +16,8 @@ export default async function fetchService(endpoint, request) {
     if (response.status === 204) {
       return null;
     }
-  
+    
+    console.log(response)
     return response.json();
   }
   

@@ -1,17 +1,23 @@
-import fetchService from "./fetchService";
-
 export async function fetchPDF() {
-    try {
-      const response = await fetchService('/pdf', { method: "GET" });
-  
-      if (!response) {
-        throw new Error("No response received");
-      }
-      
-      return response; 
-    } catch (error) {
-      console.error("Error fetching PDF:", error);
-      return null;
+  try {
+    console.log("FETCH")
+    const response = await fetch('/api/v1/pdf', { 
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
+    
+    const data = await response.json();
+    console.log("DATA:", data)
+    return data;
+    
+  } catch (error) {
+    console.error("Error fetching PDF:", error);
+    return null;
   }
-  
+}
