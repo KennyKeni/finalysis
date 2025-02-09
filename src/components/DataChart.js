@@ -40,7 +40,20 @@ const monthToNumber = (month) => {
   return months.indexOf(month)
 }
 
-const chartData = []
+const chartData = [
+  { month: "January", desktop: 186, mobile: 80 },
+  { month: "February", desktop: 305, mobile: 200 },
+  { month: "March", desktop: 237, mobile: 120 },
+  { month: "April", desktop: 73, mobile: 190 },
+  { month: "May", desktop: 209, mobile: 130 },
+  { month: "June", desktop: 214, mobile: 140 },
+  { month: "July", desktop: 164, mobile: 140 },
+  { month: "August", desktop: 214, mobile: 40 },
+  { month: "September", desktop: 214, mobile: 140 },
+  { month: "October", desktop: 209, mobile: 140 },
+  { month: "November", desktop: 114, mobile: 140 },
+  { month: "December", desktop: 214, mobile: 140 },
+]
 
 // Function to add or update total assets for the corresponding month
 function updateChartDataWithAssets(chartData, balanceSheetDataArray) {
@@ -63,7 +76,6 @@ function updateChartDataWithAssets(chartData, balanceSheetDataArray) {
       });
     }
   });
-
   setChartData(updatedChartData)
 }
 
@@ -71,32 +83,11 @@ export default function DataChart( {balanceSheetDataArray} ) {
   
   const [startMonth, setStartMonth] = useState("January")
   const [endMonth, setEndMonth] = useState("December")
-  const [chartData, setChartData] = useState([])
+  // const [chartData, setChartData] = useState([])
 
-  // Function to update the chart data with balance sheet assets
-  const updateChartDataWithAssets = (balanceSheetDataArray) => {
-    const updatedChartData = []
-
-    balanceSheetDataArray.forEach(balanceSheet => {
-      const month = new Date(balanceSheet.filingDate).toLocaleString('default', { month: 'long' })
-      const existingData = updatedChartData.find(item => item.month === month)
-
-      if (existingData) {
-        existingData.totalAssets = balanceSheet.totalAssets
-      } else {
-        updatedChartData.push({
-          month: month,
-          totalAssets: balanceSheet.totalAssets,
-        })
-      }
-    })
-
-    setChartData(updatedChartData)
-  }
-
-  useEffect(() => {
-    updateChartDataWithAssets(balanceSheetDataArray)
-  }, [balanceSheetDataArray])
+  // useEffect(() => {
+  //   updateChartDataWithAssets(balanceSheetDataArray)
+  // }, [balanceSheetDataArray])
 
   const availableStartMonths = months.filter((month) => monthToNumber(month) < monthToNumber(endMonth))
   const availableEndMonths = months.filter((month) => monthToNumber(month) > monthToNumber(startMonth))
