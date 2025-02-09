@@ -94,7 +94,6 @@ export default async function handler(req, res) {
 
           await connectToDatabase();
           insertBalanceSheet(balanceSheetData)
-          return res.status(200)
 
         } catch (error) {
           console.error("Error processing PDF:", error);

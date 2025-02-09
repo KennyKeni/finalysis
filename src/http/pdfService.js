@@ -1,6 +1,5 @@
 export async function fetchPDF() {
   try {
-    console.log("FETCH")
     const response = await fetch('/api/v1/pdf', { 
       method: "GET",
       headers: {
