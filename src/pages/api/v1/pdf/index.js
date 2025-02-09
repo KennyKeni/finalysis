@@ -1,10 +1,18 @@
+<<<<<<< HEAD
 // pages/api/v1/pdf/index.js
+=======
+>>>>>>> main
 import { getSession } from "@auth0/nextjs-auth0";
 import { geminiParse } from "@/db/actions/geminiParse";
 import formidable from 'formidable';
 import fs from 'fs/promises';
+<<<<<<< HEAD
 import { insertBalanceSheet } from "@/db/actions/json";
 import { connectToDatabase } from "@/db/dbClient";
+=======
+import { connectToDatabase } from "@/db/dbClient";
+import { getBalanceSheets, insertBalanceSheet } from "@/db/actions/balanceSheetActions";
+>>>>>>> main
 
 export const config = {
   api: {
@@ -12,12 +20,19 @@ export const config = {
   }
 };
 
+<<<<<<< HEAD
 // Helper function to parse form data
+=======
+>>>>>>> main
 const parseForm = (req) => {
   return new Promise((resolve, reject) => {
     const form = formidable({
       keepExtensions: true,
+<<<<<<< HEAD
       maxFileSize: 20 * 1024 * 1024, // 10MB limit
+=======
+      maxFileSize: 20 * 1024 * 1024, 
+>>>>>>> main
     });
     
     form.parse(req, (err, fields, files) => {
@@ -29,7 +44,10 @@ const parseForm = (req) => {
 
 export default async function handler(req, res) {
   const session = await getSession(req, res);
+<<<<<<< HEAD
   console.log("Session:", session);
+=======
+>>>>>>> main
   
   if (!session || !session.user) {
     return res.status(401).json({ error: "Unauthorized Access" });
@@ -37,17 +55,38 @@ export default async function handler(req, res) {
 
   try {
     switch (req.method) {
+<<<<<<< HEAD
       case "POST":
         try {
           const { files } = await parseForm(req);
           const file = files.pdf?.[0] || files.pdf; // Handle both new and old formidable versions
+=======
+      case "GET":
+        try {
+          console.log("GET");
+          const userId = session.user.sub;
+          await connectToDatabase();
+          const balanceSheetArr = await getBalanceSheets(userId);
+          res.setHeader('Content-Type', 'application/json');
+          return res.status(200).json({data: balanceSheetArr});
+        } catch (error) {
+          return res.status(400).json({ error: error.message });
+        }
+      case "POST":
+        try {
+          const { files } = await parseForm(req);
+          const file = files.pdf?.[0] || files.pdf;
+>>>>>>> main
 
           if (!file) {
             return res.status(400).json({ error: 'No PDF file provided' });
           }
 
+<<<<<<< HEAD
 
           // Read the file buffer
+=======
+>>>>>>> main
           let buffer;
           try {
             buffer = await fs.readFile(file.filepath || file.path);
@@ -59,10 +98,15 @@ export default async function handler(req, res) {
             });
           }
 
+<<<<<<< HEAD
           // Send to parsePDF
           const jsonData = await geminiParse(buffer);
           
           // Clean up the temporary file
+=======
+          const jsonData = await geminiParse(buffer);
+          
+>>>>>>> main
           try {
             await fs.unlink(file.filepath || file.path);
           } catch (unlinkError) {
@@ -90,6 +134,10 @@ export default async function handler(req, res) {
 
           await connectToDatabase();
           insertBalanceSheet(balanceSheetData)
+<<<<<<< HEAD
+=======
+          return res.status(200)
+>>>>>>> main
 
         } catch (error) {
           console.error("Error processing PDF:", error);

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 
 const FinancialStatementSchema = {
@@ -317,6 +318,10 @@ const FinancialStatementSchema = {
     },
   },
 };
+=======
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { FinancialStatementSchema } from "@/types/balanceSheet";
+>>>>>>> main
 
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import fs from 'fs';
@@ -326,7 +331,11 @@ import os from 'os';
 export async function geminiParse(buffer) {
   try {
     if (!process.env.GOOGLE_API_KEY) {
+<<<<<<< HEAD
       console.error("Google API key is not set");
+=======
+      console.log("Google API key is not set");
+>>>>>>> main
     }
     
     // Create a temporary file from the buffer
@@ -359,7 +368,11 @@ export async function geminiParse(buffer) {
     const model = genAI.getGenerativeModel({
       model: "gemini-2.0-flash",
       generationConfig: {
+<<<<<<< HEAD
         temperature: 1,
+=======
+        temperature: 0.8,
+>>>>>>> main
         responseMimeType: "application/json",
         responseSchema: FinancialStatementSchema,
       }
@@ -384,14 +397,24 @@ export async function geminiParse(buffer) {
             text: `You are a highly experienced professional accountant with decades of expertise in parsing and analyzing balance sheets from SEC filings. Your task is to carefully analyze the provided financial statement and extract all relevant information exactly as specified by the following schema. Please adhere to these guidelines:
 
             - **Monetary Values:** Report all monetary amounts in their base units (do not scale to thousands or millions).
+<<<<<<< HEAD
             - **UNITS**: If presented with numbers in 'millions' like 1000, multiply by 1000000, iff in 'thousands' multiply to 1000000. CONVERSION MUST BE DONE DO NOT DISCARD VALUES.
+=======
+            - **UNITS**: If presented with numbers in 'millions' like 1000, multiply by 1000000, if in 'thousands' multiply to 1000000. CONVERSION MUST BE DONE DO NOT DISCARD VALUES.
+>>>>>>> main
             - **JSON Output:** Return the data in valid JSON format.
             - **Data Completeness:** For any field where the required data is not found after a thorough review, set its value to null. Do not guess or fabricate any data.
             - **Strict Schema Adherence:** Follow the schema exactly without any deviations.
             - Proceed with the analysis and output your response strictly in the required JSON format.
+<<<<<<< HEAD
             - For null values DO NOT PUT QUOTES AROUND null.
             - It may not be obvious where each text fits in the field, make your best predictions BUT AVOID MAKING UP NUMBERS AT ALL COST.
             - DATE PARAMETS REQUIRE A DATE DO NOT PUT ANYTHING OTHER THAN DATES OR NULL`
+=======
+            - Please do not return any non descriptive fields, such as 'string' return them as null insteas.
+            - It may not be obvious where each text fits in the field, make your best predictions BUT AVOID MAKING UP NUMBERS AT ALL COST.
+            - DATE PARAMETERS REQUIRE A DATE DO NOT PUT ANYTHING OTHER THAN DATES OR NULL`
+>>>>>>> main
             
             }
           ],
@@ -415,12 +438,20 @@ export async function geminiParse(buffer) {
       console.log(parsedData)
       return parsedData; // Since the response is an array with one object
     } catch (parseError) {
+<<<<<<< HEAD
       console.error('JSON Parse Error:', parseError);
+=======
+      console.log('JSON Parse Error:', parseError);
+>>>>>>> main
       throw new Error(`Invalid JSON returned from Gemini: ${parseError.message}`);
     }
 
   } catch (error) {
+<<<<<<< HEAD
     console.error("Error in parsePDF:", error);
+=======
+    console.log("Error in parsePDF:", error);
+>>>>>>> main
     throw new Error(`Failed to parse PDF: ${error.message}`);
   }
 }

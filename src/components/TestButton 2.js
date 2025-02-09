@@ -6,11 +6,7 @@ export default function TestButton() {
 
   const fetchUser = async () => {
     try {
-<<<<<<< HEAD
-      const response = await fetch("/api/v1/test/gemini", {
-=======
       const response = await fetch("/api/v1/pdf/", {
->>>>>>> main
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -21,10 +17,6 @@ export default function TestButton() {
       }
 
       const data = await response.json();
-<<<<<<< HEAD
-      setUserData(data);
-=======
->>>>>>> main
     } catch (err) {
       setError(err.message);
     }
