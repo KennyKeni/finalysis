@@ -13,7 +13,7 @@ export default function DataCard( {text, number} ) {
         <p className="font-bold">${number}</p>
       </div>
       <div className="w-full h-full">
-        ddd
+        
       </div>
     </button>
   )
