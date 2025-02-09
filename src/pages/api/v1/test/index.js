@@ -67,13 +67,12 @@ export default async function handler(req, res) {
     },
     metadata: {
       source: "SEC 10-Q/K or Private Filing",
-      extractedAt: "2025-02-08T09:16:22Z"
+      extractedAt: new Date(),
     }
   };
 
   try {
     await connectToDatabase();
-
 
     insertBalanceSheet(balanceSheetData)
   } catch (error) {
