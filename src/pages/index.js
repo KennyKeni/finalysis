@@ -11,7 +11,7 @@ export default function Home() {
   console.log(user);
 
   return (
-    <div className="flex flex-row justify-center items-center w-full h-screen">
+    <div className="flex flex-row justify-center items-center w-full h-screen bg-white">
       <div className="flex flex-col justify-center items-center w-3/4 h-3/4 bg-red-200">
         <div className="font-extrabold text-[3rem] sm:text-[10rem]">
           Finalysis
