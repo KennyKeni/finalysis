@@ -1,28 +1,33 @@
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
-import PdfUpload from "@/components/PdfUpload";
 import { fetchPDF } from "@/http/pdfService";
+import { useState } from "react";
+import { useEffect } from "react";
 
 export default function TestPage({ user }) {
+  const [jsonArr, setJsonArr] = useState(null);
+
+  useEffect(() => {
+    if (jsonArr === null) {
+      handleFetchPDF();
+    }
+  }, [jsonArr]);
 
   const handleFetchPDF = async () => {
     try {
       const res = await fetchPDF();
-      console.log("TESTING:::", res);
+      setJsonArr(res);
     } catch (error) {
       console.log(error.message);
     }
   };
 
-
-  handleFetchPDF();
-
+  console.log(jsonArr);
+  
   return (
     <div>
-      <h1>Testing Page for API's</h1>
-      <p>Welcome {user.name}</p>
-      <PdfUpload></PdfUpload>
-    </div>
-  );
-}
+      <div>
 
-export const getServerSideProps = withPageAuthRequired();
+      </div>
+    </div>
+  )
+}
