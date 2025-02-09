@@ -27,8 +27,8 @@ export default function SideBar() {
         </button>
         <Button 
           text="Logout"
-          route="/"
-          className={router.pathname === '/' ? 'bg-white border-2' : ''}>
+          route="/api/auth/logout"
+          className={router.pathname === '/api/auth/logout' ? 'bg-white border-2' : ''}>
         </Button>
       </div>
       <SettingsPopup isOpen={isPopupOpen} closePopup={() => setIsPopupOpen(false)} />
