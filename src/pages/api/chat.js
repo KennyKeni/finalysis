@@ -31,8 +31,8 @@ export async function initChain() {
         embeddingKey: "embedding",
         searchType: "similarity",
         searchOptions: {
-            numCandidates: 100,
-            limit: 3
+            numCandidates: 200,
+            limit: 5
         }
     });
 
@@ -84,9 +84,9 @@ export async function initChain() {
             
             Question: {question}
             
-            Respond in a concise sentences.
-            If the context doesn't contain the information, say "The context provided does not contain this information."
-            
+            Respond in concise sentences. If you find any financial figures or numbers, include them.
+            If the context only contains table of contents or headers but no actual financial data, say "The provided financial documents don't contain the specific financial information, though I can see it's referencing Workday's financial statements."
+            If it asks for a json format, respond in a json format.
             Answer:
         `),
         model,
